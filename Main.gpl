@@ -1,0 +1,65 @@
+'Created: 10/5/2005 11:00:59 AM
+Module GPL
+   Public Sub MAIN
+
+        Const syringe_on As Integer = 20001 ' Syringe DIO signal
+		Const syringe_on_time As Single = 0.25 ' Syringe-on time (seconds)
+
+        Dim ii, jj As Integer		
+		Dim pallet As New RefFrame
+		Dim pocket As New Location
+	
+	' Define parameters for the pallet reference frame
+		
+		pallet.Type = 1						' Pallet reference frame
+		pallet.loc.XYZ(abs_xyz_pallet_base.X, abs_xyz_pallet_base.Y, abs_xyz_pallet_base.Z)
+											' XYZ coordinates of pallet base
+		pallet.PalletMaxIndex(1) = 5		' # of X positions
+		pallet.PalletMaxIndex(2) = 3		' # of Y positions
+		pallet.PalletPitch(1) = 30			' Spacing along X
+		pallet.PalletPitch(2) = 25			' Spacing along Y
+		
+		pocket.RefFrame = pallet			' Define pockets wrt pallet
+		pocket.Pos = abs_pos_first_pocket
+		pocket.ZClearance = abs_pos_first_pocket.ZClearance
+		
+        Signal.DIO(syringe_on) = False      ' Turn off syringe
+
+        Robot.Attached = 1                  ' Get control of the robot
+        Move.Loc(safe_position, slow_and_stop)
+
+        For ii = 1 To 2
+
+	' Go get the syringe
+
+            Move.Approach(pickup_position, fast_motion)
+            Move.Loc(pickup_position, slow_and_stop)
+            Move.WaitForEOM                 ' Synch with robot motion
+            Signal.DIO(syringe_on) = False
+            Move.Approach(pickup_position, slow_and_go)
+
+	' Move through pallet, operate syringe at each position
+
+			pallet.PalletRowColLay(1, 1, 1)	' Reset to 1st position
+			
+		    For jj = 1 To pallet.PalletMaxIndex(1)*pallet.PalletMaxIndex(2)
+	            Move.Approach(pocket, fast_motion)
+        	    Move.Loc(pocket, slow_and_stop)
+	            Move.WaitForEOM 	     	' Synch with robot motion
+
+	            Signal.DIO(syringe_on) = True
+				Controller.SleepTick(syringe_on_time/Controller.Tick)
+	            Signal.DIO(syringe_on) = False
+
+        	    Move.Approach(pocket, slow_and_go)
+				pallet.PalletNextPos		' Advance to next pallet position
+			Next jj
+			pallet.PalletOrder = (pallet.PalletOrder+2) And 2
+											' Alternate indexing first by X then by Y
+        Next ii
+
+        Move.Loc(safe_position, slow_and_stop)
+        Robot.Attached = 0                  ' Release control of the robot
+
+   End Sub
+End Module

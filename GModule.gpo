@@ -1,0 +1,80 @@
+'GPL Generated Code.  Please do not manually edit
+'Created: 10/23/2005 2:45:59 PM
+'
+Module GModule
+  Public safe_position As Location
+  Public pickup_position As Location
+  Public abs_pos_first_pocket As Location
+  Public abs_xyz_pallet_base As Location
+  Public fast_motion As Profile
+  Public slow_and_stop As Profile
+  Public slow_and_go As Profile
+
+  Public Sub Init
+    '<MotionLocation>safe_position
+    safe_position = New Location 
+    safe_position.Type = 0
+    safe_position.XYZ(50,50,-10,0,180,180)
+    safe_position.ZWorld = False
+    safe_position.ZClearance = 1E+32
+    '</MotionLocation>
+
+    '<MotionLocation>pickup_position
+    pickup_position = New Location 
+    pickup_position.Type = 0
+    pickup_position.XYZ(400,50,-60,0,180,180)
+    pickup_position.ZWorld = False
+    pickup_position.ZClearance = 30
+    '</MotionLocation>
+
+    '<MotionLocation>abs_pos_first_pocket
+    abs_pos_first_pocket = New Location 
+    abs_pos_first_pocket.Type = 0
+    abs_pos_first_pocket.XYZ(99,101,-80,0,180,0)
+    abs_pos_first_pocket.ZWorld = False
+    abs_pos_first_pocket.ZClearance = 20
+    '</MotionLocation>
+
+    '<MotionLocation>abs_xyz_pallet_base
+    abs_xyz_pallet_base = New Location 
+    abs_xyz_pallet_base.Type = 0
+    abs_xyz_pallet_base.XYZ(100,100,-80,0,0,0)
+    abs_xyz_pallet_base.ZWorld = False
+    abs_xyz_pallet_base.ZClearance = 1E+32
+    '</MotionLocation>
+
+    '<MotionProfile>fast_motion
+    fast_motion = New Profile
+    fast_motion.Speed = 100
+    fast_motion.Accel = 100
+    fast_motion.Decel = 100
+    fast_motion.AccelRamp = 0
+    fast_motion.DecelRamp = 0
+    fast_motion.Straight = False
+    fast_motion.InRange = -1
+    '</MotionProfile>
+
+    '<MotionProfile>slow_and_stop
+    slow_and_stop = New Profile
+    slow_and_stop.Speed = 50
+    slow_and_stop.Accel = 100
+    slow_and_stop.Decel = 50
+    slow_and_stop.AccelRamp = 0
+    slow_and_stop.DecelRamp = 0
+    slow_and_stop.Straight = False
+    slow_and_stop.InRange = 10
+    '</MotionProfile>
+
+    '<MotionProfile>slow_and_go
+    slow_and_go = New Profile
+    slow_and_go.Speed = 50
+    slow_and_go.Accel = 50
+    slow_and_go.Decel = 100
+    slow_and_go.AccelRamp = 0
+    slow_and_go.DecelRamp = 0
+    slow_and_go.Straight = False
+    slow_and_go.InRange = -1
+    '</MotionProfile>
+
+  End Sub 
+End Module 
